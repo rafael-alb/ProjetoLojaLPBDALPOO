@@ -1,0 +1,98 @@
+create database Loja
+
+-----------------------------CREATE TABLES--------------------------------------
+
+CREATE TABLE clientes(cod_cli INT NOT NULL,
+nome VARCHAR(30) NOT NULL, 
+data_nasc DATE NOT NULL,
+endereco VARCHAR(60) NOT NULL,
+telefone VARCHAR(11) NOT NULL,
+e_mail VARCHAR(60) NOT NULL)
+
+-----------------------------
+
+CREATE TABLE distribuidores(cod_dist INT NOT NULL,
+nome_fantasia VARCHAR(40) NOT NULL,
+razao_social VARCHAR(60) NOT NULL,
+telefone VARCHAR(11) NOT NULL,
+e_mail VARCHAR(60) NOT NULL)
+
+-----------------------------
+
+CREATE TABLE itens_venda(idfk_vendas INT NOT NULL,
+idfk_produtos INT NOT NULL,
+quantidade INT NOT NULL, 
+sub_total FLOAT NOT NULL)
+
+-----------------------------
+
+CREATE TABLE produtos(cod_prod INT NOT NULL,
+descricao VARCHAR(60) NOT NULL,
+data_validade DATE NOT NULL,
+estoque VARCHAR(11) NOT NULL,
+idfk_dist INT NOT NULL,
+preco_venda FLOAT NOT NULL,
+preco_custo FLOAT NOT NULL)
+
+-----------------------------
+
+CREATE TABLE vendas(cod_venda INT NOT NULL,
+idfk_clientes INT NOT NULL,
+total FLOAT NOT NULL,
+datahora DATETIME NOT NULL)
+
+-----------------------------ALTER TABLES---------------------------------------
+
+ALTER TABLE clientes ADD CONSTRAINT PK_CLIENTES PRIMARY KEY(cod_cli)
+-----------------------------
+ALTER TABLE vendas ADD CONSTRAINT PK_VENDAS PRIMARY KEY(cod_venda)
+-----------------------------
+ALTER TABLE produtos ADD CONSTRAINT PK_PRODUTOS PRIMARY KEY(cod_prod)
+-----------------------------
+ALTER TABLE distribuidores ADD CONSTRAINT PK_DISTRIBUIDORES PRIMARY KEY(cod_dist)
+-----------------------------
+ALTER TABLE vendas
+ADD CONSTRAINT fk_vendas_clientes FOREIGN KEY (idfk_clientes)
+REFERENCES clientes(cod_cli)
+-----------------------------
+ALTER TABLE itens_venda
+ADD CONSTRAINT fk_itens_venda_vendas FOREIGN KEY (idfk_vendas)
+REFERENCES vendas(cod_venda)
+-----------------------------
+ALTER TABLE itens_venda
+ADD CONSTRAINT fk_itens_venda_produtos FOREIGN KEY (idfk_produtos)
+REFERENCES produtos(cod_prod)
+-----------------------------
+ALTER TABLE produtos
+ADD CONSTRAINT fk_produtos_dist FOREIGN KEY (idfk_dist)
+REFERENCES distribuidores(cod_dist)
+
+-----------------------------SELECT TABLES---------------------------------------
+
+--SELECT * FROM clientes
+-----------------------------
+--SELECT * FROM distribuidores
+-----------------------------
+--SELECT * FROM itens_venda
+-----------------------------
+--SELECT * FROM produtos
+-----------------------------
+--SELECT * FROM vendas
+-----------------------------
+--SELECT YEAR(datahora) FROM vendas
+-----------------------------
+--SELECT * FROM clientes where e_mail is NULL
+-----------------------------
+--SELECT * FROM produtos where data_validade<CURRENT_TIMESTAMP
+-----------------------------
+--SELECT idfk_clientes, count(cod_venda) FROM vendas WHERE Year(datahora) = Year('2020') group by idfk_clientes;
+-----------------------------
+--SELECT SUM(total) as total FROM vendas 
+-----------------------------
+--select SUM(sub_total) as sub_total from itens_venda where idfk_vendas = 1
+-----------------------------
+--select * from itens_venda order by idfk_vendas
+
+------------------------UPDATES--------------------------------------
+
+--update vendas set total = 53.9499988555908 where cod_venda = 10
